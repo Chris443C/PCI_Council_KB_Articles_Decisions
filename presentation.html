@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patronusec Council KB — Head of QA Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:       #09111f;
+  --navy-card:  #0f1c30;
+  --navy-lift:  #152540;
+  --gold:       #c9922a;
+  --gold-lt:    #e4b45a;
+  --gold-dim:   rgba(201,146,42,0.14);
+  --gold-bd:    rgba(201,146,42,0.28);
+  --blue:       #5b9cf6;
+  --blue-dim:   rgba(91,156,246,0.12);
+  --green:      #4db88c;
+  --text:       #ddd8ce;
+  --text-muted: #6b7d9e;
+  --border:     rgba(255,255,255,0.06);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--navy);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Grain overlay ─────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ── Slide deck ─────────────────────────────────── */
+.deck {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: 52px 72px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(48px) scale(0.99);
+  transition: opacity 0.52s cubic-bezier(0.4,0,0.2,1),
+              transform 0.52s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  overflow: hidden;
+}
+.slide.active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  pointer-events: all;
+}
+.slide.prev {
+  opacity: 0;
+  transform: translateX(-48px) scale(0.99);
+}
+
+/* ── Decorative bg accent ───────────────────────── */
+.slide::after {
+  content: '';
+  position: absolute;
+  bottom: -120px;
+  right: -80px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,146,42,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Typography ─────────────────────────────────── */
+.eyebrow {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 4.2rem;
+  font-weight: 300;
+  line-height: 1.08;
+  color: var(--text);
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+}
+h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 3rem;
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 28px;
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+p { line-height: 1.65; color: var(--text-muted); }
+strong { color: var(--text); font-weight: 500; }
+em { font-style: italic; color: var(--gold-lt); }
+code, .mono {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85em;
+  color: var(--blue);
+  background: var(--blue-dim);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+/* ── Gold rule ───────────────────────────────────── */
+.rule {
+  width: 48px;
+  height: 2px;
+  background: var(--gold);
+  margin-bottom: 28px;
+  border-radius: 2px;
+}
+.rule.wide { width: 100%; opacity: 0.15; margin: 24px 0; }
+
+/* ── Cards / panels ─────────────────────────────── */
+.card {
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 24px;
+}
+.card.gold-bd { border-color: var(--gold-bd); }
+.card.blue-bd { border-color: rgba(91,156,246,0.28); }
+.card.green-bd { border-color: rgba(77,184,140,0.28); }
+
+/* ── Grid helpers ────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+
+/* ── Pain point list ─────────────────────────────── */
+.pain-list { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.pain-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold-bd);
+  border-radius: 4px;
+}
+.pain-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  min-width: 28px;
+}
+.pain-text { font-size: 0.93rem; color: var(--text); line-height: 1.5; padding-top: 3px; }
+.pain-text small { display: block; color: var(--text-muted); font-size: 0.82rem; margin-top: 2px; }
+
+/* ── Pipeline diagram ────────────────────────────── */
+.pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 24px 0 8px;
+  position: relative;
+}
+.pipe-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 110px;
+}
+.pipe-box {
+  background: var(--navy-card);
+  border: 1px solid var(--gold-bd);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+.pipe-box.highlight { background: var(--gold-dim); border-color: var(--gold); color: var(--gold-lt); }
+.pipe-box.blue { background: var(--blue-dim); border-color: rgba(91,156,246,0.4); color: var(--blue); }
+.pipe-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4; }
+.pipe-arrow {
+  flex: 1;
+  height: 1px;
+  background: var(--gold-bd);
+  position: relative;
+  min-width: 20px;
+}
+.pipe-arrow::after {
+  content: '›';
+  position: absolute;
+  right: -4px;
+  top: -9px;
+  color: var(--gold);
+  font-size: 1.1rem;
+}
+
+.pipeline-wrap { overflow-x: auto; }
+
+.escalation-path {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 14px 20px;
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid rgba(224,92,92,0.4);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.escalation-path strong { color: #e05c5c; }
+
+/* ── Article type cards ──────────────────────────── */
+.type-card {
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.type-card.interp { border-top: 3px solid var(--gold); }
+.type-card.wording { border-top: 3px solid var(--blue); }
+.type-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+  width: fit-content;
+}
+.type-badge.gold { background: var(--gold-dim); color: var(--gold); }
+.type-badge.blue { background: var(--blue-dim); color: var(--blue); }
+.type-question {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.type-feature-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.type-feature-list li {
+  font-size: 0.83rem;
+  color: var(--text);
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.45;
+}
+.type-feature-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: 300;
+}
+.type-feature-list li.blue-marker::before { color: var(--blue); }
+.type-example {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--navy);
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  border: 1px solid var(--border);
+}
+.type-example span { color: var(--gold); }
+.type-example span.blue { color: var(--blue); }
+
+/* ── Schema fields ───────────────────────────────── */
+.schema-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.schema-group h4 {
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--gold-bd);
+}
+.schema-field {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.77rem;
+  color: var(--text);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.schema-field .req {
+  font-size: 0.62rem;
+  color: var(--gold);
+  font-weight: 600;
+  font-family: 'IBM Plex Sans', sans-serif;
+  letter-spacing: 0.05em;
+}
+.schema-field .opt { color: var(--text-muted); font-size: 0.62rem; font-family: 'IBM Plex Sans', sans-serif; }
+
+/* ── Code block ──────────────────────────────────── */
+.code-block {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold-bd);
+  border-radius: 4px;
+  padding: 18px 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.76rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+  overflow: hidden;
+}
+.code-block .k { color: var(--gold); }
+.code-block .v { color: var(--text); }
+.code-block .c { color: #3a4d68; font-style: italic; }
+.code-block .placeholder { color: var(--blue); }
+.code-block .agreed { color: var(--green); }
+
+/* ── Option cards ────────────────────────────────── */
+.option-card {
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+.option-card.recommended {
+  border-color: var(--gold-bd);
+  background: var(--navy-lift);
+}
+.option-rec {
+  position: absolute;
+  top: -10px;
+  left: 18px;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+.option-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.option-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  color: var(--text);
+}
+.option-tag {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.pros-cons { display: flex; flex-direction: column; gap: 4px; }
+.pro, .con {
+  font-size: 0.76rem;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.45;
+}
+.pro { color: var(--green); }
+.pro::before { content: '+'; position: absolute; left: 0; font-weight: 600; }
+.con { color: #e0856b; }
+.con::before { content: '–'; position: absolute; left: 0; }
+
+/* ── Phase timeline ──────────────────────────────── */
+.phases { display: flex; flex-direction: column; gap: 16px; }
+.phase {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 24px;
+  align-items: start;
+  padding: 20px 22px;
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  position: relative;
+}
+.phase.active-phase { border-color: var(--gold-bd); }
+.phase-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.phase-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+}
+.phase-when {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+.phase-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.phase-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.phase-item {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+/* ── Gap grid ────────────────────────────────────── */
+.gap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.gap-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.gap-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--gold);
+  min-width: 22px;
+  line-height: 1;
+}
+.gap-body strong {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.gap-body span {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ── Decisions table ─────────────────────────────── */
+.decisions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.decisions-table th {
+  text-align: left;
+  padding: 8px 14px;
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-bottom: 1px solid var(--gold-bd);
+  background: var(--navy-card);
+}
+.decisions-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.decisions-table tr:hover td { background: rgba(255,255,255,0.02); }
+.decisions-table td:first-child { color: var(--text); font-weight: 500; }
+.decisions-table td:nth-child(2) { color: var(--text-muted); font-size: 0.78rem; }
+.decisions-table td:nth-child(3) { color: var(--gold-lt); font-size: 0.78rem; }
+
+/* ── Artefact tree ───────────────────────────────── */
+.artefact-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+.file-tree { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; line-height: 2; }
+.file-tree .dir { color: var(--gold); }
+.file-tree .file { color: var(--text-muted); }
+.file-tree .file.agreed { color: var(--green); }
+.file-tree .file.draft { color: var(--blue); }
+.file-tree .file.doc { color: var(--text); }
+.file-tree .indent { padding-left: 20px; }
+.file-tree .indent2 { padding-left: 40px; }
+
+/* ── Live example slides ─────────────────────────── */
+.example-split { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.example-meta { display: flex; flex-direction: column; gap: 10px; }
+.meta-row { display: flex; align-items: baseline; gap: 10px; }
+.meta-key {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  min-width: 90px;
+}
+.meta-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--text);
+}
+.meta-val.gold { color: var(--gold); }
+.meta-val.blue { color: var(--blue); }
+.meta-val.green { color: var(--green); }
+.wording-box {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: 4px;
+  padding: 16px 18px;
+  font-size: 0.8rem;
+  color: var(--text);
+  line-height: 1.7;
+  font-style: italic;
+}
+.wording-box .label {
+  font-style: normal;
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 8px;
+}
+.wording-box .placeholder { color: var(--blue); font-style: normal; font-family: 'IBM Plex Mono', monospace; font-size: 0.78em; }
+
+/* ── Cover slide extras ──────────────────────────── */
+.cover-meta {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.cover-tag {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+.cover-tag strong { color: var(--text); }
+.badge-row { display: flex; gap: 10px; margin-top: 18px; }
+.badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+.badge.gold { border-color: var(--gold-bd); color: var(--gold); background: var(--gold-dim); }
+.badge.blue { border-color: rgba(91,156,246,0.3); color: var(--blue); background: var(--blue-dim); }
+.badge.green { border-color: rgba(77,184,140,0.3); color: var(--green); background: rgba(77,184,140,0.1); }
+
+/* ── Progress bar ────────────────────────────────── */
+.progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.05);
+  z-index: 100;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.4s ease;
+  box-shadow: 0 0 8px var(--gold);
+}
+
+/* ── Navigation ──────────────────────────────────── */
+.nav-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 100;
+}
+.nav-btn {
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.nav-btn:hover { border-color: var(--gold-bd); color: var(--gold); background: var(--gold-dim); }
+.nav-dots { display: flex; gap: 6px; align-items: center; }
+.nav-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border);
+  cursor: pointer;
+  transition: all 0.25s;
+  border: 1px solid transparent;
+}
+.nav-dot.active { background: var(--gold); width: 18px; border-radius: 3px; }
+.nav-dot:hover { background: var(--text-muted); }
+.slide-counter {
+  position: fixed;
+  top: 20px;
+  right: 28px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: 'IBM Plex Mono', monospace;
+  z-index: 100;
+  letter-spacing: 0.08em;
+}
+.slide-counter span { color: var(--gold); }
+
+/* ── Patronusec wordmark ─────────────────────────── */
+.wordmark {
+  position: fixed;
+  top: 20px;
+  left: 28px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  z-index: 100;
+}
+.wordmark em { color: var(--gold); font-style: normal; }
+
+/* ── Utilities ───────────────────────────────────── */
+.mt-4 { margin-top: 4px; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.col-gold { color: var(--gold); }
+.col-blue { color: var(--blue); }
+.col-green { color: var(--green); }
+.col-muted { color: var(--text-muted); }
+.small { font-size: 0.82rem; }
+.xsmall { font-size: 0.74rem; }
+
+@media (max-height: 700px) {
+  .slide { padding: 36px 60px 70px; }
+  h2 { font-size: 2.4rem; margin-bottom: 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="wordmark"><em>P</em>atronusec</div>
+<div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+<div class="slide-counter"><span id="current-num">01</span> / <span id="total-num">12</span></div>
+
+<div class="deck" id="deck">
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 1 — COVER
+═══════════════════════════════════════════════════════ -->
+<section class="slide active" data-index="0">
+  <div class="rule"></div>
+  <div class="eyebrow">Head of QA Review · March 2026</div>
+  <h1>Patronusec<br>Council<br><em style="font-style:italic;color:var(--gold);">Knowledge Base</em></h1>
+  <p style="font-size:1.05rem;color:var(--text-muted);max-width:560px;line-height:1.7;margin-top:4px;">
+    A governance system for capturing monthly interpretation decisions, agreed QSA wording, and the firm's position across PCI DSS, P2PE, PIN, 3DS and SSF.
+  </p>
+  <div class="badge-row">
+    <span class="badge gold">PCI DSS v4.0.1</span>
+    <span class="badge blue">P2PE · PIN · 3DS · SSF</span>
+    <span class="badge green">SharePoint-ready</span>
+  </div>
+  <div class="cover-meta">
+    <div class="cover-tag"><strong>Status</strong><br>Proof of concept complete</div>
+    <div style="width:1px;height:32px;background:var(--border)"></div>
+    <div class="cover-tag"><strong>Artefacts</strong><br>6 articles · 5 templates · 2 governance docs</div>
+    <div style="width:1px;height:32px;background:var(--border)"></div>
+    <div class="cover-tag"><strong>Programmes</strong><br>DSS (5 articles) · P2PE (1 article)</div>
+    <div style="width:1px;height:32px;background:var(--border)"></div>
+    <div class="cover-tag"><strong>Prepared by</strong><br>C. Ince</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 2 — THE PROBLEM
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="1">
+  <div class="eyebrow">The Challenge</div>
+  <h2>Our expertise is in meetings.<br>It should be in the firm.</h2>
+  <div class="pain-list">
+    <div class="pain-item">
+      <div class="pain-num">01</div>
+      <div class="pain-text">
+        <strong>Decisions made in meetings — lost in email threads</strong>
+        <small>Agreed positions exist only in attendees' heads and inboxes. No durable record.</small>
+      </div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-num">02</div>
+      <div class="pain-text">
+        <strong>QSAs giving inconsistent guidance on the same requirement</strong>
+        <small>Entity A gets one answer. Entity B gets a different one. Both cite "Patronusec policy."</small>
+      </div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-num">03</div>
+      <div class="pain-text">
+        <strong>No audit trail when a decision is challenged in a QA review</strong>
+        <small>Who agreed this interpretation? When? Based on what? Currently — no record.</small>
+      </div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-num">04</div>
+      <div class="pain-text">
+        <strong>ROC wording templates recreated per-assessor, not standardised</strong>
+        <small>Every QSA writes the Section 6.2 sampling narrative from scratch. Inconsistency in every delivery.</small>
+      </div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-num">05</div>
+      <div class="pain-text">
+        <strong>Stale guidance persists silently when standards update</strong>
+        <small>PCI DSS v4.1 drops. Agreed positions from v4.0.1 continue to circulate with no "under review" flag.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 3 — THE PROPOSAL
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="2">
+  <div class="eyebrow">The Proposal</div>
+  <h2>One governed source of truth.</h2>
+  <div class="grid-3" style="margin-top: 4px; margin-bottom: 28px;">
+    <div class="card gold-bd" style="text-align:center;padding:28px 20px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--gold);margin-bottom:8px;">I</div>
+      <div style="font-weight:600;margin-bottom:6px;font-size:0.9rem;">Agreed Positions</div>
+      <div class="xsmall col-muted">Firm interpretations of requirements. Every QSA references the same agreed position.</div>
+    </div>
+    <div class="card gold-bd" style="text-align:center;padding:28px 20px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--gold);margin-bottom:8px;">II</div>
+      <div style="font-weight:600;margin-bottom:6px;font-size:0.9rem;">Standard Wording</div>
+      <div class="xsmall col-muted">Approved ROC and SAQ template text. Consistent delivery across all assessors.</div>
+    </div>
+    <div class="card gold-bd" style="text-align:center;padding:28px 20px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--gold);margin-bottom:8px;">III</div>
+      <div style="font-weight:600;margin-bottom:6px;font-size:0.9rem;">Governance Trail</div>
+      <div class="xsmall col-muted">Every decision traced to a meeting, a date, and a named approver. Defensible in any QA review.</div>
+    </div>
+  </div>
+  <p class="small col-muted" style="margin-bottom: 14px;">End-to-end flow — from submission to SharePoint:</p>
+  <div class="pipeline-wrap">
+    <div class="pipeline">
+      <div class="pipe-node">
+        <div class="pipe-box">QSA Submits<br>Agenda Item</div>
+        <div class="pipe-sub">Standard form<br>5 days prior</div>
+      </div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node">
+        <div class="pipe-box highlight">Monthly<br>Council Meeting</div>
+        <div class="pipe-sub">Agree · Defer<br>Escalate</div>
+      </div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node">
+        <div class="pipe-box">Minutes<br>Recorded</div>
+        <div class="pipe-sub">Agreed / Not agreed<br>documented</div>
+      </div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node">
+        <div class="pipe-box">Draft KB<br>Article</div>
+        <div class="pipe-sub">STAR format<br>Schema validated</div>
+      </div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node">
+        <div class="pipe-box">Head of QA<br>Approves</div>
+        <div class="pipe-sub">Named approver<br>on record</div>
+      </div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node">
+        <div class="pipe-box blue">Published<br>to SharePoint</div>
+        <div class="pipe-sub">Searchable by<br>programme + req.</div>
+      </div>
+    </div>
+  </div>
+  <div class="escalation-path">
+    <strong>↳ Escalation path:</strong>&nbsp; Items that cannot be agreed at QA level → <strong>CEO Arbitration Record</strong> → CEO decision → Article created. Every step documented with a named decision-maker and date.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 4 — WHAT'S ALREADY BUILT
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="3">
+  <div class="eyebrow">Proof of Concept</div>
+  <h2>Built from your existing submissions.</h2>
+  <div class="artefact-cols">
+    <div>
+      <p class="xsmall col-muted" style="margin-bottom:12px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">KB Articles</p>
+      <div class="file-tree">
+        <div class="dir">DSS/</div>
+        <div class="indent file agreed">DSS-8.3.6-001.md <span class="col-green" style="font-size:0.7rem;">● agreed</span></div>
+        <div class="indent file agreed">DSS-8.3.6-002.md <span class="col-green" style="font-size:0.7rem;">● agreed</span></div>
+        <div class="indent file agreed">DSS-6.4.3-001.md <span class="col-green" style="font-size:0.7rem;">● agreed</span></div>
+        <div class="indent file agreed">DSS-11.3.1-001.md <span class="col-green" style="font-size:0.7rem;">● agreed</span></div>
+        <div class="indent file draft">DSS-ROC-S6.2-001.md <span class="col-blue" style="font-size:0.7rem;">◌ draft</span></div>
+        <div class="dir" style="margin-top:6px;">P2PE/</div>
+        <div class="indent file draft">P2PE-1-4-001.md <span class="col-blue" style="font-size:0.7rem;">◌ draft</span></div>
+      </div>
+      <p class="xsmall col-muted" style="margin:18px 0 10px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Governance Records</p>
+      <div class="file-tree">
+        <div class="dir">_governance/</div>
+        <div class="indent file doc">2026-03-12-agenda-item-P2PE-1-4.md</div>
+        <div class="indent file doc">2026-03-12-agenda-item-DSS-ROC-S6.2.md</div>
+      </div>
+    </div>
+    <div>
+      <p class="xsmall col-muted" style="margin-bottom:12px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Templates</p>
+      <div class="file-tree">
+        <div class="dir">_templates/</div>
+        <div class="indent file doc">article-interpretation.md</div>
+        <div class="indent file doc">article-wording-guidance.md</div>
+        <div class="indent file doc">meeting-agenda-item.md</div>
+        <div class="indent file doc">meeting-minutes.md</div>
+        <div class="indent file doc">ceo-arbitration.md</div>
+      </div>
+      <p class="xsmall col-muted" style="margin:18px 0 10px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Documentation</p>
+      <div class="file-tree">
+        <div class="file doc">SCHEMA.md — 20 fields, 12 validation rules</div>
+        <div class="file doc" style="margin-top:4px;">EDITORIAL-POLICY.md — governance doc</div>
+      </div>
+      <div class="card" style="margin-top:20px;border-left:3px solid var(--gold-bd);">
+        <p class="xsmall col-muted" style="margin-bottom:6px;"><strong class="col-text">Draft articles</strong> are real pending items:</p>
+        <p class="xsmall col-muted">P2PE-1-4-001 and DSS-ROC-S6.2-001 were created from your existing <code>Section4-P2PE-PROVS.docx</code> and <code>section6.2-sampling.docx</code> submissions — ready for this meeting to agree.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 5 — ARTICLE TYPES
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="4">
+  <div class="eyebrow">Architecture</div>
+  <h2>Two article types. One article is not enough.</h2>
+  <div class="grid-2" style="margin-top: 8px;">
+    <div class="type-card interp">
+      <span class="type-badge gold">Interpretation Article</span>
+      <div class="type-question">"What does this requirement mean in this scenario?"</div>
+      <ul class="type-feature-list">
+        <li>Full <strong>STAR narrative</strong> — Situation, Task, Action, Result</li>
+        <li>States the firm's <strong>agreed position</strong> unambiguously</li>
+        <li>Includes <strong>conditions</strong> on when it applies</li>
+        <li>Documents <strong>assessment impact</strong> — what the QSA must verify</li>
+        <li>Traceable to a named <strong>meeting and approver</strong></li>
+      </ul>
+      <div class="type-example">
+        <span>id:</span> "DSS-8.3.6-001"<br>
+        <span>article_type:</span> "interpretation"<br>
+        <span>status:</span> <span class="agreed">"agreed"</span><br>
+        <span>meeting_id:</span> "2026-02-12-monthly"<br>
+        <span style="color:var(--text-muted);">// Result: "The 8-char fallback covers length<br>// only. Complexity gap requires 3 controls..."</span>
+      </div>
+    </div>
+    <div class="type-card wording">
+      <span class="type-badge blue">Wording Guidance Article</span>
+      <div class="type-question">"What should we write in the ROC/SAQ?"</div>
+      <ul class="type-feature-list">
+        <li class="blue-marker">Multiple <strong>named variants</strong> — Generic, Shorter, Cloud-native…</li>
+        <li class="blue-marker"><strong><code>% Placeholder_Name %</code></strong> convention for entity-specific values</li>
+        <li class="blue-marker">Covers ROC <strong>table cell wording</strong> as well as free-text narratives</li>
+        <li class="blue-marker">"What not to write" section — captures <strong>rejected wording</strong></li>
+        <li class="blue-marker">Always paired with a <strong>companion interpretation article</strong></li>
+      </ul>
+      <div class="type-example">
+        <span class="blue">id:</span> "DSS-11.3.1-001"<br>
+        <span class="blue">article_type:</span> "wording-guidance"<br>
+        <span class="blue">status:</span> <span class="agreed">"agreed"</span><br>
+        <span style="color:var(--text-muted);">// Variants: Generic · Shorter · Cloud-native<br>// Container/CI-CD · ROC Table S5.3</span>
+      </div>
+    </div>
+  </div>
+  <div class="rule wide"></div>
+  <p class="xsmall col-muted">The original brief conflated these two types. Keeping them separate means QSAs can quickly find the approved text they need without re-reading the full analysis — while the interpretation article remains the authoritative record for QA audit purposes.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 6 — LIVE EXAMPLE: DSS-11.3.1-001
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="5">
+  <div class="eyebrow">Live Example — DSS-11.3.1-001</div>
+  <h2 style="font-size:2.2rem;">Cloud-native scanning:<br>when there's no traditional scan report.</h2>
+  <div class="example-split" style="margin-top:12px;">
+    <div class="example-meta">
+      <div class="meta-row"><div class="meta-key">Article ID</div><div class="meta-val gold">DSS-11.3.1-001</div></div>
+      <div class="meta-row"><div class="meta-key">Type</div><div class="meta-val blue">wording-guidance</div></div>
+      <div class="meta-row"><div class="meta-key">Programme</div><div class="meta-val">DSS v4.0.1</div></div>
+      <div class="meta-row"><div class="meta-key">Requirements</div><div class="meta-val">11.3.1 · 11.3.1.1 · 11.3.1.2 · 11.3.1.3</div></div>
+      <div class="meta-row"><div class="meta-key">Status</div><div class="meta-val green">● agreed</div></div>
+      <div class="meta-row"><div class="meta-key">Variants</div><div class="meta-val">6 approved variants</div></div>
+      <div class="meta-row"><div class="meta-key">Covers</div><div class="meta-val" style="font-size:0.76rem;">Azure Defender · AWS Inspector · GCP · OCI · Alibaba · Tencent</div></div>
+      <div class="card" style="margin-top:14px;border-left:3px solid var(--gold-bd);">
+        <p class="xsmall col-muted">This article was raised as an email (<code>11.3.1example.docx</code>). The system converted it into a fully governed, searchable article covering 4 requirements across 6 cloud platforms — with approved ROC table wording included.</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="wording-box">
+        <div class="label">Variant: Generic (Req 11.3.1)</div>
+        The entity uses <span class="placeholder">% Internal_Vulnerability_Scanning_Tool %</span> to perform internal vulnerability scanning across in-scope CDE and connected system components. Vulnerability assessments are performed on a continuous basis, with time-stamped scan outputs, dashboards, and/or exported reports retained to demonstrate that scanning occurred more frequently than once every three months during the assessment period…
+      </div>
+      <div class="wording-box">
+        <div class="label">Variant: ROC Table S5.3 — Date Column</div>
+        <span class="placeholder">% Quarter_Start_Date %</span> to <span class="placeholder">% Quarter_End_Date %</span>, combined time-stamped outputs from <span class="placeholder">% Internal_Vulnerability_Scanning_Tool %</span>
+      </div>
+      <div class="card" style="padding:12px 14px;">
+        <p class="xsmall" style="color:var(--text-muted);"><strong style="color:var(--text);">% Placeholder convention:</strong> Every entity-specific value is marked <code>% Like_This %</code>. A QA check before ROC delivery can grep for <code>%</code> to catch any values not yet substituted.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 7 — LIVE EXAMPLE: P2PE-1-4-001
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="6">
+  <div class="eyebrow">Live Example — P2PE-1-4-001</div>
+  <h2 style="font-size:2.2rem;">Multi-programme: P2PE is supported<br>from day one.</h2>
+  <div class="example-split" style="margin-top:12px;">
+    <div class="example-meta">
+      <div class="meta-row"><div class="meta-key">Article ID</div><div class="meta-val gold">P2PE-1-4-001</div></div>
+      <div class="meta-row"><div class="meta-key">Type</div><div class="meta-val gold">interpretation</div></div>
+      <div class="meta-row"><div class="meta-key">Programme</div><div class="meta-val">P2PE v3.1</div></div>
+      <div class="meta-row"><div class="meta-key">Requirements</div><div class="meta-val">1-4 · 6-4</div></div>
+      <div class="meta-row"><div class="meta-key">Status</div><div class="meta-val blue">◌ draft — ready to agree today</div></div>
+      <div class="meta-row"><div class="meta-key">Source</div><div class="meta-val" style="font-size:0.76rem;">Section4-P2PE-PROVS.docx (reformatted)</div></div>
+      <div class="card" style="margin-top:14px;border-left:3px solid var(--blue);">
+        <p class="xsmall col-muted">P2PE uses hyphen-notation for requirements (1-4, 6-4) rather than dot-notation. The schema handles this cleanly — article IDs follow the standard's own numbering convention.</p>
+        <p class="xsmall col-muted" style="margin-top:8px;">This article is a draft. It was built directly from your existing submission and contains the proposed agreed position. <strong style="color:var(--text);">This meeting could agree it today.</strong></p>
+      </div>
+    </div>
+    <div>
+      <div class="code-block">
+        <span class="c"># The question:</span><br>
+        <span class="c"># Section 4 says "every N/A requirement</span><br>
+        <span class="c"># must be in this table" — but does that</span><br>
+        <span class="c"># mean only top-level, or sub-reqs too?</span><br><br>
+        <span class="k">Situation:</span> <span class="v">1-4.b marked N/A (PTS device,</span><br>
+        <span class="v">  not FIPS HSM). Parent 1-4 is In Place.</span><br><br>
+        <span class="k">Proposed position:</span><br>
+        <span class="v">  The instruction applies to ALL requirements</span><br>
+        <span class="v">  and sub-requirements marked N/A —</span><br>
+        <span class="v">  not only top-level requirements.</span><br><br>
+        <span class="k">Mixed cases (e.g. 6-4.b):</span><br>
+        <span class="v">  → Partial entry required in Section 4</span><br>
+        <span class="v">  → Identify the specific N/A element</span><br>
+        <span class="v">  → Include justification for that element</span>
+      </div>
+      <div style="margin-top:12px;padding:14px 16px;background:var(--gold-dim);border:1px solid var(--gold-bd);border-radius:6px;">
+        <p class="xsmall" style="color:var(--gold-lt);">
+          <strong>Why this matters for QA:</strong> Without a firm position, QSAs are currently inconsistent on this across P-ROV deliverables — some list sub-requirement N/As in Section 4, some do not. A QA reviewer or PCI SSC audit could flag the inconsistency.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 8 — IMPLEMENTATION OPTIONS
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="7">
+  <div class="eyebrow">Technical Approach</div>
+  <h2>Three options. One recommended path.</h2>
+  <div class="grid-3" style="margin-top:8px;">
+
+    <div class="option-card recommended">
+      <div class="option-rec">MVP · Start Here</div>
+      <div class="option-label">Option A</div>
+      <div class="option-title">SharePoint Native</div>
+      <div class="option-tag">Articles as SharePoint Pages with metadata columns. Term Store for taxonomy. Microsoft Search for discovery.</div>
+      <div class="rule wide" style="margin:12px 0;"></div>
+      <div class="pros-cons">
+        <div class="pro">Zero additional infrastructure — already in M365</div>
+        <div class="pro">Microsoft Search works immediately</div>
+        <div class="pro">Familiar to all QSAs</div>
+        <div class="pro">Page versioning = automatic audit trail</div>
+        <div class="con">WYSIWYG editing invites format drift</div>
+        <div class="con">No clean diff view between versions</div>
+      </div>
+    </div>
+
+    <div class="option-card recommended" style="border-color:var(--blue);border-top-color:var(--blue);">
+      <div class="option-rec" style="background:var(--blue);">Long-Term · Best Governance</div>
+      <div class="option-label">Option B</div>
+      <div class="option-title">Git → SharePoint</div>
+      <div class="option-tag">Articles authored in Markdown in this repo. GitHub Actions publishes to SharePoint via Graph API on merge. PR = approval gate.</div>
+      <div class="rule wide" style="margin:12px 0;"></div>
+      <div class="pros-cons">
+        <div class="pro">Git history is tamper-evident — ideal for QA audit</div>
+        <div class="pro">PR-based approval is rigorous and named</div>
+        <div class="pro">Schema linter validates fields on every commit</div>
+        <div class="pro">This repo is already set up for this approach</div>
+        <div class="con">QSAs need Git / GitHub web editor familiarity</div>
+        <div class="con">Pipeline requires maintenance</div>
+      </div>
+    </div>
+
+    <div class="option-card">
+      <div class="option-label">Option C</div>
+      <div class="option-title">Dedicated Static Site</div>
+      <div class="option-tag">Docusaurus or VitePress builds a documentation portal. Hosted on Azure Static Web Apps or GitHub Pages.</div>
+      <div class="rule wide" style="margin:12px 0;"></div>
+      <div class="pros-cons">
+        <div class="pro">Best browsing experience; Algolia search</div>
+        <div class="pro">Built-in versioning by standard version</div>
+        <div class="con">Outside M365 — separate access control</div>
+        <div class="con">Most engineering effort to maintain</div>
+        <div class="con">May face M365-only policy resistance</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="rule wide"></div>
+  <p class="xsmall col-muted"><strong class="col-text">Recommendation:</strong> Start with <em>Option A</em> — prove value within weeks, zero cost, familiar for QSAs. Migrate to <em>Option B</em> in Phase 2 using this repo as the source of truth. The groundwork is already in place.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 9 — PHASED PLAN
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="8">
+  <div class="eyebrow">The Plan</div>
+  <h2>Three phases. First articles in four weeks.</h2>
+  <div class="phases" style="margin-top:12px;">
+    <div class="phase active-phase">
+      <div class="phase-label">
+        <div class="phase-num">01</div>
+        <div class="phase-when">Weeks 1–4</div>
+      </div>
+      <div>
+        <div class="phase-title">MVP — Prove the value</div>
+        <div class="phase-items">
+          <span class="phase-item">Provision SharePoint Communication Site</span>
+          <span class="phase-item">Agree schema &amp; editorial policy (this meeting)</span>
+          <span class="phase-item">Publish first 10 articles from prior meetings</span>
+          <span class="phase-item">Enable page versioning + Term Store taxonomy</span>
+          <span class="phase-item">Agree approver delegation per programme</span>
+          <span class="phase-item" style="border-color:var(--gold-bd);color:var(--gold-lt);">P2PE-1-4-001 &amp; DSS-ROC-S6.2-001 agreed at this meeting →</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">
+        <div class="phase-num">02</div>
+        <div class="phase-when">Months 2–6</div>
+      </div>
+      <div>
+        <div class="phase-title">Enhanced Governance</div>
+        <div class="phase-items">
+          <span class="phase-item">Git repo as source of truth (this repo)</span>
+          <span class="phase-item">PR-based approval workflow</span>
+          <span class="phase-item">Frontmatter linter in CI</span>
+          <span class="phase-item">Teams #kb-updates notifications</span>
+          <span class="phase-item">Monthly review-due reminders</span>
+          <span class="phase-item">Graph API publish script</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">
+        <div class="phase-num">03</div>
+        <div class="phase-when">Months 6–18</div>
+      </div>
+      <div>
+        <div class="phase-title">Integration &amp; Intelligence</div>
+        <div class="phase-items">
+          <span class="phase-item">KB links from within AMS workflow</span>
+          <span class="phase-item">Faceted search (programme + version + type)</span>
+          <span class="phase-item">Auto-flag articles on new standard version</span>
+          <span class="phase-item">Historical audit package generation</span>
+          <span class="phase-item">Optional: client-facing position statements</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 10 — GAPS ADDRESSED
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="9">
+  <div class="eyebrow">Gap Analysis</div>
+  <h2>Ten things the original brief<br>didn't cover.</h2>
+  <div class="gap-grid" style="margin-top:12px;">
+    <div class="gap-item">
+      <div class="gap-num">1</div>
+      <div class="gap-body">
+        <strong>No approval workflow</strong>
+        <span>Without a named approver, a KB article is opinion — not a firm position.</span>
+      </div>
+    </div>
+    <div class="gap-item">
+      <div class="gap-num">2</div>
+      <div class="gap-body">
+        <strong>No article lifecycle</strong>
+        <span>PCI standards change. Stale articles with no review_due are dangerous.</span>
+      </div>
+    </div>
+    <div class="gap-item">
+      <div class="gap-num">3</div>
+      <div class="gap-body">
+        <strong>No attribution</strong>
+        <span>meeting_id + approved_by make decisions defensible in a QA audit.</span>
+      </div>
+    </div>
+    <div class="gap-item">
+      <div class="gap-num">4</div>
+      <div class="gap-body">
+        <strong>Two article types conflated</strong>
+        <span>Interpretation decisions and ROC wording templates serve different audiences.</span>
+      </div>
+    </div>
+    <div class="gap-item">
+      <div class="gap-num">5</div>
+      <div class="gap-body">
+        <strong>No supersession chain</strong>
+        <span>Old articles must stay visible with a banner — never deleted. Audit trail requirement.</span>
+      </div>
+    </div>
+    <div class="gap-item">
+      <div class="gap-num">6</div>
+      <div class="gap-body">
+        <strong>PCI SSC IP &amp; copyright</strong>
+        <span>contains_standard_excerpts flag triggers IP review. Disclaimer required on every article.</span>
+      </div>
+    </div>
+    <div class="gap-item">
+      <div class="gap-num">7</div>
+      <div class="gap-body">
+        <strong>No cross-references</strong>
+        <span>Requirements interact. Related articles must link to each other.</span>
+      </div>
+    </div>
+    <div class="gap-item">
+      <div class="gap-num">8</div>
+      <div class="gap-body">
+        <strong>No change notifications</strong>
+        <span>QSAs on active assessments need to know when guidance changes.</span>
+      </div>
+    </div>
+    <div class="gap-item">
+      <div class="gap-num">9</div>
+      <div class="gap-body">
+        <strong>No assessment tool integration</strong>
+        <span>The KB is most valuable from within the assessment workflow, not a separate URL.</span>
+      </div>
+    </div>
+    <div class="gap-item">
+      <div class="gap-num">10</div>
+      <div class="gap-body">
+        <strong>No controlled tag taxonomy</strong>
+        <span>Free-text tags degrade. Term Store or enum list must be established from day one.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 11 — DECISIONS NEEDED
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="10">
+  <div class="eyebrow">For This Meeting</div>
+  <h2>Eight decisions to make this real.</h2>
+  <table class="decisions-table" style="margin-top:16px;">
+    <thead>
+      <tr>
+        <th style="width:3%;">#</th>
+        <th style="width:35%;">Decision</th>
+        <th style="width:30%;">Options</th>
+        <th style="width:32%;">Recommendation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;">1</td>
+        <td>Separate schema for interpretation vs. wording-guidance?</td>
+        <td>Unified / Separate</td>
+        <td>Separate — different audiences, different schema</td>
+      </tr>
+      <tr>
+        <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;">2</td>
+        <td>Named approver for all articles?</td>
+        <td>HoQA only / Delegated per programme</td>
+        <td>HoQA default, delegated per programme</td>
+      </tr>
+      <tr>
+        <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;">3</td>
+        <td>Review cycle for agreed articles?</td>
+        <td>6 months / 12 months / Event-driven</td>
+        <td>12 months + immediate on new standard version</td>
+      </tr>
+      <tr>
+        <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;">4</td>
+        <td>Git repo or SharePoint as source of truth?</td>
+        <td>Git / SharePoint / Both</td>
+        <td>Git (this repo) — start SP, migrate Phase 2</td>
+      </tr>
+      <tr>
+        <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;">5</td>
+        <td>Backfill prior decisions?</td>
+        <td>All / Top 10–15 / New articles only</td>
+        <td>Backfill top 15; new articles going forward</td>
+      </tr>
+      <tr>
+        <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;">6</td>
+        <td>Client-facing articles?</td>
+        <td>Internal only / Selected public</td>
+        <td>Internal only for now</td>
+      </tr>
+      <tr>
+        <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;">7</td>
+        <td>Who owns the SharePoint site?</td>
+        <td>IT / QA / HoQA / Named individual</td>
+        <td>Nominate a named owner before launch</td>
+      </tr>
+      <tr>
+        <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;">8</td>
+        <td>Agree P2PE-1-4-001 and DSS-ROC-S6.2-001 today?</td>
+        <td>Agree / Defer / Amend</td>
+        <td>Agree — both are already fully drafted</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 12 — NEXT STEPS
+═══════════════════════════════════════════════════════ -->
+<section class="slide" data-index="11">
+  <div class="eyebrow">Next Steps</div>
+  <h2>From meeting to live system<br>in four weeks.</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:12px;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card gold-bd" style="padding:18px 20px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-weight:300;line-height:1;min-width:28px;">1</div>
+          <div>
+            <strong style="font-size:0.88rem;display:block;margin-bottom:4px;">Agree decisions 1–8 (this meeting)</strong>
+            <span class="xsmall col-muted">Resolve the 8 questions on the previous slide. Owner: Head of QA.</span>
+          </div>
+        </div>
+      </div>
+      <div class="card gold-bd" style="padding:18px 20px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-weight:300;line-height:1;min-width:28px;">2</div>
+          <div>
+            <strong style="font-size:0.88rem;display:block;margin-bottom:4px;">Nominate SharePoint site owner</strong>
+            <span class="xsmall col-muted">A named owner is essential before provisioning. Agree today.</span>
+          </div>
+        </div>
+      </div>
+      <div class="card gold-bd" style="padding:18px 20px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-weight:300;line-height:1;min-width:28px;">3</div>
+          <div>
+            <strong style="font-size:0.88rem;display:block;margin-bottom:4px;">Provision SharePoint site + Term Store</strong>
+            <span class="xsmall col-muted">Site owner + IT. Target: week 1. Enable page versioning from day one.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card gold-bd" style="padding:18px 20px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-weight:300;line-height:1;min-width:28px;">4</div>
+          <div>
+            <strong style="font-size:0.88rem;display:block;margin-bottom:4px;">Publish the 4 agreed articles</strong>
+            <span class="xsmall col-muted">DSS-8.3.6-001/002, DSS-6.4.3-001, DSS-11.3.1-001 → SharePoint. Target: week 2.</span>
+          </div>
+        </div>
+      </div>
+      <div class="card gold-bd" style="padding:18px 20px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-weight:300;line-height:1;min-width:28px;">5</div>
+          <div>
+            <strong style="font-size:0.88rem;display:block;margin-bottom:4px;">Agree P2PE-1-4-001 and DSS-ROC-S6.2-001</strong>
+            <span class="xsmall col-muted">Both are already fully drafted. Can be agreed in this meeting or next month.</span>
+          </div>
+        </div>
+      </div>
+      <div class="card gold-bd" style="padding:18px 20px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-weight:300;line-height:1;min-width:28px;">6</div>
+          <div>
+            <strong style="font-size:0.88rem;display:block;margin-bottom:4px;">Identify the top 15 backfill items</strong>
+            <span class="xsmall col-muted">Run a "what have we agreed before that isn't written down?" exercise with the QSA team. Target: month 1.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="rule wide"></div>
+  <p class="xsmall col-muted" style="text-align:center;">
+    All templates, schema, editorial policy and example articles are ready. The system is built — we need the decisions to launch it.
+  </p>
+</section>
+
+</div><!-- /deck -->
+
+<!-- Nav bar -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">&#8592;</button>
+  <div class="nav-dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">&#8594;</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+// Build dots
+const dotsEl = document.getElementById('dots');
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.addEventListener('click', () => goTo(i));
+  dotsEl.appendChild(d);
+});
+document.getElementById('total-num').textContent = String(total).padStart(2, '0');
+
+function goTo(n) {
+  slides[current].classList.remove('active');
+  slides[current].classList.add('prev');
+  setTimeout(() => slides[current].classList.remove('prev'), 520);
+
+  current = Math.max(0, Math.min(n, total - 1));
+
+  slides[current].classList.add('active');
+  updateUI();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next < 0 || next >= total) return;
+  goTo(next);
+}
+
+function updateUI() {
+  // progress bar
+  const pct = total > 1 ? (current / (total - 1)) * 100 : 100;
+  document.getElementById('progress').style.width = pct + '%';
+
+  // counter
+  document.getElementById('current-num').textContent = String(current + 1).padStart(2, '0');
+
+  // dots
+  document.querySelectorAll('.nav-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+
+  // buttons
+  document.getElementById('prevBtn').style.opacity = current === 0 ? '0.3' : '1';
+  document.getElementById('nextBtn').style.opacity = current === total - 1 ? '0.3' : '1';
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    navigate(1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    navigate(-1);
+  } else if (e.key === 'Home') {
+    goTo(0);
+  } else if (e.key === 'End') {
+    goTo(total - 1);
+  }
+});
+
+// Click right half of slide to advance, left half to go back
+document.getElementById('deck').addEventListener('click', e => {
+  const x = e.clientX;
+  const half = window.innerWidth / 2;
+  if (x > half) navigate(1);
+  else navigate(-1);
+});
+
+updateUI();
+</script>
+</body>
+</html>

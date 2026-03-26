@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/chris/OneDrive/Documents/GitHub/PCI_Council_KB_Articles_Decisions/**)",
+      "Bash(done)",
+      "Bash(python3 -c \":*)"
+    ]
+  }
+}

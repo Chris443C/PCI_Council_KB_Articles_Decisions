@@ -1,0 +1,14 @@
+# Source documents (originals kept locally, not committed)
+*.docx
+*.doc
+*.pdf
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+*.swp
+*~
